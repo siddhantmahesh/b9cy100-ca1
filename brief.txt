@@ -1,0 +1,88 @@
+Create and test a function to compute net pay from payment, work and tax credit information.
+
+-----------------------
+
+computeAllPayment(employeeFile,hoursFile):
+       #returns a list of payment information dictionaries
+
+so if we execute computeAllPayment('Employees.txt','Hours.txt'),
+
+...
+
+we read in a file (here named Employees.txt), which contains the following information: (space separated)
+
+<StaffID> <LastName> <FirstName> <RegHours> <HourlyRate> <OTMultiple> <TaxCredit> <StandardBand>
+
+For Example:
+
+12345 Green Joe 37 16 1.5 70 700
+
+Create Employee Objects from these (you must create at least two in your solution)
+
+Read in a file (here named Hours.txt) which contains the following information: (This must have more rows than the 
+file Employees.txt)
+
+<StaffID> <Date> <HoursWorked>
+
+12345 31/10/2021 42
+
+Create a method computePayment in class Employee which takes HoursWorked and date as input, 
+and returns a payment information dictionary as follows: (if jg is an Employee object for worker Joe Green)
+
+We will assume a standard rate of 20% and a higher rate of 40% (we will ignore PRSI, USC etc.)
+
+>>>jg.computePayment(42 '31/10/2021')
+
+{'name': 'Joe Green', 'Date':'31/10/2021', 'Regular Hours Worked':37,'Overtime Hours Worked':5,
+'Regular Rate':16,'Overtime Rate':24, 'Regular Pay':592,'Overtime Pay':120,'Gross Pay':712, 
+'Standard Rate Pay':700,'Higher Rate Pay':12, 'Standard Tax':140,'Higher Tax':4.8,'Total Tax':144.8,
+'Tax Credit':70,'Net Deductions':74.8, 'Net Pay': 637.2}
+
+Include test cases testing the following:
+
+Net pay cannot exceed gross pay 
+
+#TestMethod
+
+def testNetLessEqualGross(self):
+  e=Employee(#Joe Green's Information)
+  pi=e.computePayment(1,'31/10/2021')
+  self.assertLessEqual(pi['Net Pay'],pi['Gross Pay'])
+
+Overtime pay or overtime hours cannot be negative.
+
+Regular Hours Worked cannot exceed hours worked
+
+Higher Tax cannot be negative.
+
+Net Pay cannot be negative.
+
+========================
+
+SUBMISSION CRITERIA
+
+========================
+
+You may submit a .py or .ipynb file.
+
+The file must be adequately documented using comments, text cells, or an accompanying README file
+
+You MUST use version control. This can be implicit, such as in Google Colab, or explicit, such as GitHub. The revision history must be visible to me, either through adding me as a collaborator in Google Colab, or by adding collaborator or making the repo public on GitHub.
+
+Please note that you MUST use commits or pinned revisions to demonstrate your progress in solving the problem.
+
+Anything which is appearing in GitHub as "Added files by upload" will be assumed not to be your work, as your work should be demonstrated in the incremental revisions.
+
+Any submission which has a single "Added files by upload" commit will be treated as copied and given a zero grade.
+
+===============================
+
+There should be ZERO input from user
+
+You should NEVER hard code inputs
+
+you should ALWAYS had code tests
+
+The computePayment loops take data from the two files.
+
+The employee information in the TestCase methods should be hard-coded
