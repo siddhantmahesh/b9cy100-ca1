@@ -73,6 +73,29 @@ class Employee:
 
 ############################## READ FROM EMPLOYEE AND HOURS FILE ########################################
 
+empObjectList = []
+
+with open("employees.txt", "r") as emp:
+
+    empList = []
+    for item in emp:
+        empList.append(item)
+        print(str(empList))
+
+    for item in empList:
+        empDetails = item.split()
+
+        empObject = Employee(empDetails[0],empDetails[1],empDetails[2]
+            ,empDetails[3],empDetails[4],empDetails[5],empDetails[6],empDetails[7])
+
+        empObjectList.append(empObject)
+        #print(str(empDetails))
+
+    #print(str(empObjectList))
+    for item in empObjectList:
+        print(str(item.fName))
+    
+
 
 
 
