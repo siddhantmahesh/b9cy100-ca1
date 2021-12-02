@@ -81,7 +81,7 @@ class Employee:
 
 ############################## READ FROM EMPLOYEE AND HOURS FILE ########################################
 
-empObjectList = []
+empObjectDict = {}
 hrsObjectDict = {}
 
 with open("employees.txt", "r") as emp:
@@ -104,10 +104,10 @@ with open("employees.txt", "r") as emp:
         #Employee(empID: str, lName: str, fName: str, regHours: float, 
                 #hourlyRate: float, otMultiple: float, taxCredit: float, standardBand: float)
 
-        empObjectList.append(empObject) #add employee object to emp object list
+        empObjectDict[empDetails[0]] = empObject #add employee object to emp object list
 
-    # for item in empObjectList:
-    #     print(str(item.fName))
+    for k, v in empObjectDict.items():
+        print(k + " : " + str(v.fName))
     
 
 with open("hours.txt", "r") as hrs:
@@ -123,10 +123,9 @@ with open("hours.txt", "r") as hrs:
         empID = item[0]
         if empID not in hrsObjectDict.keys():
             hrsObjectDict[empID] = []
+        else:
+            hrsObjectDict[empID].append(item)
 
-    for item in hoursList:
-        empID = item[0]
-        hrsObjectDict[empID].append(Hours(item[0], item[1], item[2]))
 
     print(str(hrsObjectDict))
     # print(str(hoursList)) => [['BAT1536', '01/01/2021', '40'], ['BAT1536', '08/01/2021', '35'],...]
