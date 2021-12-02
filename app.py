@@ -1,11 +1,3 @@
-class Hours:
-
-    def __init__(self, empID:str, dateWorked:str, hoursWorked:float):
-
-        self.empID = empID
-        self.dateWorked = dateWorked
-        self.hoursWorked = hoursWorked
-
 class Employee:
 
     def __init__(self, empID:str, lName:str, fName:str, regHours:float, hourlyRate:float,
@@ -19,6 +11,13 @@ class Employee:
         self.otMultiple = otMultiple
         self.taxCredit = taxCredit
         self.standardBand = standardBand
+
+        if regHours < 0 or \
+        hourlyRate < 0 or \
+            otMultiple < 0 or \
+                taxCredit < 0 or \
+                    standardBand < 0 :
+            raise ValueError("Invalid value check : Employee " + empID)
 
 
     def computePayment(self, hoursWorked:float, dateWorked:str):
@@ -79,87 +78,96 @@ class Employee:
 # e = Employee("123", "doe", "john", 40, 45, 1.5, 80, 1900)
 # print (str(e.computePayment(43, "10/10/2021")))
 
-############################## READ FROM EMPLOYEE AND HOURS FILE ########################################
+############################## READ FROM EMPLOYEE AND HOURS FILE ######################################################
 
 empObjectDict = {}
 hrsObjectDict = {}
 
-with open("employees.txt", "r") as emp:
+try:
+    with open("employees.txt", "r") as emp:
 
-    empList = []
+        empList = []
 
-    for item in emp: #line in employees.txt
+        for item in emp: #line in employees.txt
 
-        empList.append(item)
-        #print(str(empList))  ['BAT1536 WAYNE BRUCE 40 25 1.5 80 750\n', 'MAN1331 MAN BAT 35 45 1.5 80 700']
+            empList.append(item)
+            #print(str(empList))  ['BAT1536 WAYNE BRUCE 40 25 1.5 80 750\n', 'MAN1331 MAN BAT 35 45 1.5 80 700']
 
-    for item in empList: #field line in above array
+        for item in empList: #field line in above array
 
-        empDetails = item.split() 
-        #print(str(empDetails)) [BAT1536, WAYNE, BRUCE, 40, 25, 1.5, 80, 750\n]
+            empDetails = item.split() 
+            #print(str(empDetails)) [BAT1536, WAYNE, BRUCE, 40, 25, 1.5, 80, 750\n]
+            try:
+                empObject = Employee(empDetails[0],empDetails[1],empDetails[2]
+                    ,float(empDetails[3]),float(empDetails[4]),float(empDetails[5])
+                    ,float(empDetails[6]),float(empDetails[7]))
+            except TypeError as e :
+                print(e)
+                quit()
+            except ValueError as e :
+                print(e)
+                quit()
+            except Exception as e:
+                print(e)
+                quit()
 
-        empObject = Employee(empDetails[0],empDetails[1],empDetails[2]
-            ,empDetails[3],empDetails[4],empDetails[5],empDetails[6],empDetails[7])
-        #Employee object CTR:
-        #Employee(empID: str, lName: str, fName: str, regHours: float, 
-                #hourlyRate: float, otMultiple: float, taxCredit: float, standardBand: float)
+            #Employee object CTR:
+            #Employee(empID: str, lName: str, fName: str, regHours: float, 
+                    #hourlyRate: float, otMultiple: float, taxCredit: float, standardBand: float)
 
-        empObjectDict[empDetails[0]] = empObject #add employee object to emp object list
+            empObjectDict[empDetails[0]] = empObject #add employee object to emp object list
 
-    for k, v in empObjectDict.items():
-        print(k + " : " + str(v.fName))
+        # for k, v in empObjectDict.items():
+        #     print(k + " : " + str(v.fName))  #BAT1536 : BRUCE
+        #                                      #MAN1331 : BAT
     
+    with open("hours.txt", "r") as hrs:
+        hoursList = []
 
-with open("hours.txt", "r") as hrs:
-    
-    hoursList = []
+        for item in hrs: #line in hours.txt
+            lis = item.split()
+            hoursList.append(lis)
+            # print(item) #=> BAT1536 01/01/2021 40
 
-    for item in hrs: #line in hours.txt
-        lis = item.split()
-        hoursList.append(lis)
-        # print(item) => BAT1536 01/01/2021 40
+        for item in hoursList:
+            empID = item[0]
 
-    for item in hoursList:
-        empID = item[0]
-        if empID not in hrsObjectDict.keys():
-            hrsObjectDict[empID] = []
-        else:
+            if empID not in hrsObjectDict.keys():
+                hrsObjectDict[empID] = []
+
             hrsObjectDict[empID].append(item)
 
+except FileNotFoundError as e:
+    print(e)
+    quit()
 
-    print(str(hrsObjectDict))
-    # print(str(hoursList)) => [['BAT1536', '01/01/2021', '40'], ['BAT1536', '08/01/2021', '35'],...]
-            
-        # print(str(item))
-
-
-        
-        # empID = item.split(" ")[0]
-        # # print(empID)
-        # # print("empID")
-
-        # if empID not in hrsObjectDict.keys():
-        #     print(str(lis))
-        #     print("here")
-        #     val = []
-        #     hrsObjectDict[empID] = val.append(item.split())
-        
-        # else:
-        #     print(str(lis))
-        #     print("there")
-        #     val = []
-        #     hrsObjectDict[empID] = val.append(item.split())
+# print(str(hrsObjectDict)) #{'BAT1536': [['BAT1536', '08/01/2021', '35'], ['BAT1536', '15/01/2021', '45'], ['BAT1536', '21/01/2021', '47']], 'MAN1331': [['MAN1331', 
+#                                 #'08/01/2021', '35'], ['MAN1331', '15/01/2021', '45'], ['MAN1331', '21/01/2021', '47']]}
+#########################################################################################################################
 
 
+############################## GENERATE EMPLOYEE PAYMENT DETAILS FROM DICITONARIES ########################################
 
+computedWages = [] #store all the computed wages in this list
 
+for k, v in hrsObjectDict.items():
+    empID = k #emp id
+    empHrs = v #list of hours worked wrt date
 
+    # print(empID + " " + str(empHrs)) BAT1536 [['BAT1536', '08/01/2021', '35'], ['BAT1536', '15/01/2021', '45'], ['BAT1536', '21/01/2021', '47']]
+    #                                 MAN1331 [['MAN1331', '08/01/2021', '35'], ['MAN1331', '15/01/2021', '45'], ['MAN1331', '21/01/2021', '47']]
 
+    for item in empHrs:
+        try:
+            if float(item[2]) < 0:
+                raise ValueError("Invalid hours worked for : " + str(item))
+            computedWages.append(empObjectDict[empID].computePayment(float(item[2]), item[1]))
+            # print(computedWages)
+            # print(empObjectDict[empID].computePayment(float(item[2]), item[1]))
+        except Exception as e:
+            print(e)
+            quit()
 
+print(computedWages)
 
-
-
-
-
-
-########################################################################################################
+###########################################################################################################
