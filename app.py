@@ -1,4 +1,12 @@
 import unittest
+
+######################################## GITHUB REPO ################################################
+
+#       repo link : https://github.com/siddhantmahesh/b9cy100-ca1.git
+
+######################################## GITHUB REPO ################################################
+
+
 ######################################### EMPLOYEE CLASS ######################################################
 class Employee:
 
@@ -147,7 +155,8 @@ def computeAllPayments(employeeFile:str, hoursFile:str):
         print(e)
         # print(45)
         quit()
-    #########################################################################################################################
+    ############################## READ FROM EMPLOYEE AND HOURS FILE ######################################################
+
 
     ############################## GENERATE EMPLOYEE PAYMENT DETAILS FROM DICITONARIES ########################################
 
@@ -182,14 +191,15 @@ def computeAllPayments(employeeFile:str, hoursFile:str):
                 # print(33)
                 quit()
 
-    ###########################################################################################################
     print("\nComputed Wages : \n" + str(computedWages)) #print consolidated computation
-
-computeAllPayments("./employees.txt", "./hours.txt")
+    
+    ############################## GENERATE EMPLOYEE PAYMENT DETAILS FROM DICITONARIES ########################################
+    
 
 ####################################### TEST CASES ##########################################################
 class ComputeTestCases(unittest.TestCase):
 
+    # TC #1 Net pay cannot exceed gross pay 
     def testGrossAndNetPay(self):
         e = Employee("G10", "jackson", "michael", 40, 55, 1.5, 100, 2000)
         computeData = e.computePayment(60, "1/1/2020")
@@ -197,40 +207,45 @@ class ComputeTestCases(unittest.TestCase):
         grossPay = computeData["gross pay"]
         self.assertGreaterEqual(grossPay, netPay)
 
+    # TC #2 Overtime hours cannot be negative 
     def testOverTimePay(self):
         e = Employee("G10", "jackson", "michael", 40, 55, 1.5, 100, 2000)
         computeData = e.computePayment(100, "1/1/2020")
         overTimePay = computeData["ot pay"]
         self.assertGreaterEqual(overTimePay, 0)
 
+    # TC #3 Overtime hours cannot be negative
     def testOverTimeHrs(self):
         e = Employee("G10", "jackson", "michael", 40, 55, 1.5, 100, 2000)
         computeData = e.computePayment(50, "1/1/2020")
         overTimeHrs = computeData["ot hrs worked"]
         self.assertGreaterEqual(overTimeHrs, 0)
 
-
+    #TC #4 Regular Hours Worked cannot exceed hours worked
     def testRegularHours(self):
         e = Employee("G10", "jackson", "michael", 40, 55, 1.5, 100, 2000)
-        hrsWorked = 60
+        hrsWorked = 60 #declared as a variable since emp object doesnt have this property, neither computed by it
         computeData = e.computePayment(hrsWorked, "1/1/2020")
         regHrsWorked = computeData["regular hrs worked"]
-        self.assertLessEqual(regHrsWorked, hrsWorked)
+        self.assertLessEqual(regHrsWorked, hrsWorked) #variable required for comparison
 
+    #TC #5 Higher Tax cannot be negative.
     def testHigherTax(self):
         e = Employee("G10", "jackson", "michael", 40, 55, 1.5, 100, 2000)
         computeData = e.computePayment(50, "1/1/2020")
         higherTax = computeData["higher tax"]
         self.assertGreaterEqual(higherTax, 0)
 
+    #TC #6 Net Pay cannot be negative.
     def testNetPay(self):
         e = Employee("G10", "jackson", "michael", 40, 55, 1.5, 100, 2000)
         computeData = e.computePayment(50, "1/1/2020")
         netPay = computeData["net pay"]
         self.assertGreaterEqual(netPay, 0)
 
-
-
 unittest.main(argv=['ignored'], exit=False)
 
-#######################################################################################################
+####################################### TEST CASES ##########################################################
+
+# RUN CODE
+computeAllPayments("./employees.txt", "./hours.txt")
